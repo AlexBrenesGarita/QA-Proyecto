@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Nueva tutoría - TutorQA</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+<header class="header">
+  <div class="container">
+    <h1 class="logo">TutorQA</h1>
+    <nav>
+      <span class="user-info">Hola, <%= currentUser.name %></span>
+      <a href="/tutoring/dashboard">Dashboard</a>
+      <a href="/tutoring/sessions">Mis tutorías</a>
+      <% if (currentUser.role === 'admin') { %>
+        <a href="/tutoring/sessions/admin">Todas las tutorías</a>
+      <% } %>
+      <a href="/logout" class="btn-secondary">Cerrar sesión</a>
+    </nav>
+  </div>
+</header>
+
+<main class="main">
+  <div class="container">
+    <h2>Reservar nueva tutoría</h2>
+
+    <% if (error) { %>
+      <div class="alert alert-error"><%= error %></div>
+    <% } %>
+
+    <form method="POST" action="/tutoring/sessions/new" class="form">
+      <div class="form-group">
+        <label for="tutorId">Tutor</label>
+        <select name="tutorId" id="tutorId" required>
+          <option value="">Seleccione un tutor</option>
+          <% tutors.forEach(function(tutor) { %>
+            <option value="<%= tutor.id %>">
+              <%= tutor.name %> - <%= tutor.subject %>
+            </option>
+          <% }) %>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="date">Fecha</label>
+        <input type="date" id="date" name="date" required />
+      </div>
+
+      <div class="form-group">
+        <label for="time">Hora</label>
+        <input type="time" id="time" name="time" required />
+      </div>
+
+      <div class="form-group">
+        <label for="topic">Tema (opcional)</label>
+        <input
+          type="text"
+          id="topic"
+          name="topic"
+          placeholder="Ej. Integrales, Joins en SQL, etc."
+        />
+      </div>
+
+      <button type="submit" class="btn-primary">Reservar</button>
+    </form>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <p>Proyecto de Auditoría y Validación de Sistemas de Información - TutorQA</p>
+  </div>
+</footer>
+</body>
+</html>

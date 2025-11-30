@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Iniciar sesión - TutorQA</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body class="auth-body">
+<main class="auth-main">
+  <section class="card">
+    <h1>Iniciar sesión</h1>
+
+    <% if (error) { %>
+      <div class="alert alert-error"><%= error %></div>
+    <% } %>
+
+    <form method="POST" action="/login" class="form">
+      <div class="form-group">
+        <label for="email">Correo electrónico</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          required
+          placeholder="admin@tutorqa.com"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Contraseña</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          required
+          placeholder="Admin123*"
+        />
+      </div>
+
+      <button type="submit" class="btn-primary">Entrar</button>
+    </form>
+
+    <p class="hint">
+      Para pruebas: admin@tutorqa.com / Admin123* o student@tutorqa.com / Student123*
+    </p>
+  </section>
+</main>
+</body>
+</html>

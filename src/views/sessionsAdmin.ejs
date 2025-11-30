@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Todas las tutorías - Admin - TutorQA</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+<header class="header">
+  <div class="container">
+    <h1 class="logo">TutorQA</h1>
+    <nav>
+      <span class="user-info">Hola, <%= currentUser.name %> (admin)</span>
+      <a href="/tutoring/dashboard">Dashboard</a>
+      <a href="/tutoring/sessions">Mis tutorías</a>
+      <a href="/tutoring/sessions/admin">Todas las tutorías</a>
+      <a href="/logout" class="btn-secondary">Cerrar sesión</a>
+    </nav>
+  </div>
+</header>
+
+<main class="main">
+  <div class="container">
+    <h2>Todas las tutorías (vista administrador)</h2>
+
+    <% if (sessions.length === 0) { %>
+      <p>No hay tutorías registradas.</p>
+    <% } else { %>
+      <table class="table mt-2">
+        <thead>
+        <tr>
+          <th>ID</th>
+          <th>Estudiante ID</th>
+          <th>Tutor</th>
+          <th>Materia</th>
+          <th>Fecha</th>
+          <th>Hora</th>
+          <th>Tema</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% sessions.forEach(function(session) { %>
+          <tr>
+            <td><%= session.id %></td>
+            <td><%= session.studentId %></td>
+            <td><%= session.tutorName %></td>
+            <td><%= session.subject %></td>
+            <td><%= session.date %></td>
+            <td><%= session.time %></td>
+            <td><%= session.topic || '-' %></td>
+          </tr>
+        <% }) %>
+        </tbody>
+      </table>
+    <% } %>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <p>Proyecto de Auditoría y Validación de Sistemas de Información - TutorQA</p>
+  </div>
+</footer>
+</body>
+</html>
