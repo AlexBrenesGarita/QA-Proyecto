@@ -208,3 +208,8 @@ body {
   color: #6b7280;
   margin-top: 0.6rem;
 }
+
+.btn-small {
+  font-size: 0.8rem;
+  padding: 0.25rem 0.6rem;
+}

@@ -14,10 +14,12 @@
       <a href="/tutoring/dashboard">Dashboard</a>
       <a href="/tutoring/sessions">Mis tutorías</a>
       <% if (currentUser.role === 'admin') { %>
-        <a href="/tutoring/sessions/admin">Todas las tutorías</a>
+      <a href="/tutoring/sessions/admin">Todas las tutorías</a>
+      <a href="/tutoring/stats">Estadísticas</a>
       <% } %>
-      <a href="/logout" class="btn-secondary">Cerrar sesión</a>
-    </nav>
+  <a href="/logout" class="btn-secondary">Cerrar sesión</a>
+</nav>
+
   </div>
 </header>
 

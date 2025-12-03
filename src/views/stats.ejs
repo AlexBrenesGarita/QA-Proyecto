@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Estadísticas - TutorQA</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+<header class="header">
+  <div class="container">
+    <h1 class="logo">TutorQA</h1>
+    <nav>
+      <span class="user-info">Hola, <%= currentUser.name %> (admin)</span>
+      <a href="/tutoring/dashboard">Dashboard</a>
+      <a href="/tutoring/sessions">Mis tutorías</a>
+      <a href="/tutoring/sessions/admin">Todas las tutorías</a>
+      <a href="/tutoring/stats">Estadísticas</a>
+      <a href="/logout" class="btn-secondary">Cerrar sesión</a>
+    </nav>
+  </div>
+</header>
+
+<main class="main">
+  <div class="container">
+    <h2>Estadísticas generales</h2>
+
+    <section class="grid">
+      <div class="card">
+        <h3>Resumen por estado</h3>
+        <table class="table">
+          <tbody>
+          <tr>
+            <th>Total de tutorías</th>
+            <td><%= totalSessions %></td>
+          </tr>
+          <tr>
+            <th>Programadas</th>
+            <td><%= counts.scheduled %></td>
+          </tr>
+          <tr>
+            <th>Completadas</th>
+            <td><%= counts.completed %></td>
+          </tr>
+          <tr>
+            <th>Canceladas</th>
+            <td><%= counts.canceled %></td>
+          </tr>
+          <tr>
+            <th>Valoraciones registradas</th>
+            <td><%= globalRating.count %></td>
+          </tr>
+          <tr>
+            <th>Calificación promedio global</th>
+            <td>
+              <% if (globalRating.count > 0 && globalRating.average !== null) { %>
+                <%= globalRating.average.toFixed(2) %> / 5
+              <% } else { %>
+                N/A
+              <% } %>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <h3>Resumen por tutor</h3>
+        <% if (byTutor.length === 0) { %>
+          <p>No hay datos disponibles.</p>
+        <% } else { %>
+          <table class="table">
+            <thead>
+            <tr>
+              <th>Tutor</th>
+              <th>Materia</th>
+              <th>Total</th>
+              <th>Programadas</th>
+              <th>Completadas</th>
+              <th>Canceladas</th>
+              <th>Promedio</th>
+              <th># Valoraciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% byTutor.forEach(function(t) { %>
+              <tr>
+                <td><%= t.tutorName %></td>
+                <td><%= t.subject %></td>
+                <td><%= t.total %></td>
+                <td><%= t.scheduled %></td>
+                <td><%= t.completed %></td>
+                <td><%= t.canceled %></td>
+                <td>
+                  <% if (t.ratingCount > 0 && t.averageRating !== null) { %>
+                    <%= t.averageRating.toFixed(2) %> / 5
+                  <% } else { %>
+                    N/A
+                  <% } %>
+                </td>
+                <td><%= t.ratingCount %></td>
+              </tr>
+            <% }) %>
+            </tbody>
+          </table>
+        <% } %>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <p>Proyecto de Auditoría y Validación de Sistemas de Información - TutorQA</p>
+  </div>
+</footer>
+</body>
+</html>

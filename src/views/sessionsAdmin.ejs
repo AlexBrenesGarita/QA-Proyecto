@@ -14,6 +14,7 @@
       <a href="/tutoring/dashboard">Dashboard</a>
       <a href="/tutoring/sessions">Mis tutorías</a>
       <a href="/tutoring/sessions/admin">Todas las tutorías</a>
+      <a href="/tutoring/stats">Estadísticas</a>
       <a href="/logout" class="btn-secondary">Cerrar sesión</a>
     </nav>
   </div>
@@ -36,6 +37,9 @@
           <th>Fecha</th>
           <th>Hora</th>
           <th>Tema</th>
+          <th>Estado</th>
+          <th>Calificación</th>
+          <th>Acciones</th>
         </tr>
         </thead>
         <tbody>
@@ -48,6 +52,34 @@
             <td><%= session.date %></td>
             <td><%= session.time %></td>
             <td><%= session.topic || '-' %></td>
+            <td><%= session.status %></td>
+            <td>
+              <% if (session.rating !== null) { %>
+                <%= session.rating %> / 5
+              <% } else { %>
+                -
+              <% } %>
+            </td>
+            <td>
+              <% if (session.status === 'scheduled') { %>
+                <form method="POST"
+                      action="/tutoring/sessions/<%= session.id %>/cancel"
+                      style="display:inline;">
+                  <button type="submit" class="btn-secondary btn-small">
+                    Cancelar
+                  </button>
+                </form>
+                <form method="POST"
+                      action="/tutoring/sessions/<%= session.id %>/complete"
+                      style="display:inline; margin-left: 0.25rem;">
+                  <button type="submit" class="btn-primary btn-small">
+                    Completar
+                  </button>
+                </form>
+              <% } else { %>
+                -
+              <% } %>
+            </td>
           </tr>
         <% }) %>
         </tbody>
