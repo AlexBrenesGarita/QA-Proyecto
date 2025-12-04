@@ -1,5 +1,6 @@
 const {
   listTutors,
+  addTutor,
   listSessionsByStudent,
   listAllSessions,
   createSession,
@@ -9,6 +10,8 @@ const {
   addSessionRating,
   getRatingStats
 } = require('../models/sessionModel');
+
+// ---------- DASHBOARD / SESIONES ----------
 
 function getDashboard(req, res) {
   const tutors = listTutors();
@@ -82,7 +85,7 @@ function getAdminSessions(req, res) {
   res.render('sessionsAdmin', { sessions: allSessions });
 }
 
-// ---------- Cancelar tutoría (student/admin) ----------
+// ---------- CANCELAR / COMPLETAR SESIONES ----------
 
 function postCancelSession(req, res) {
   const { id } = req.params;
@@ -93,7 +96,6 @@ function postCancelSession(req, res) {
     return res.status(404).send('Sesión no encontrada');
   }
 
-  // Solo dueño o admin pueden cancelar
   if (user.role !== 'admin' && session.studentId !== user.id) {
     return res.status(403).send('No está autorizado para cancelar esta tutoría');
   }
@@ -114,8 +116,6 @@ function postCancelSession(req, res) {
     return res.status(400).send(error.message);
   }
 }
-
-// ---------- Marcar tutoría como completada (solo admin) ----------
 
 function postCompleteSession(req, res) {
   const { id } = req.params;
@@ -144,7 +144,7 @@ function postCompleteSession(req, res) {
   }
 }
 
-// ---------- NUEVO: Página para valorar tutoría (student) ----------
+// ---------- VALORAR SESIONES (STUDENT) ----------
 
 function getRateSessionPage(req, res) {
   const { id } = req.params;
@@ -210,7 +210,7 @@ function postRateSession(req, res) {
   }
 }
 
-// ---------- Página de estadísticas (solo admin) con ratings ----------
+// ---------- ESTADÍSTICAS (ADMIN) ----------
 
 function getStatsPage(req, res) {
   const user = req.session.user;
@@ -262,6 +262,95 @@ function getStatsPage(req, res) {
   });
 }
 
+// ---------- ADMINISTRACIÓN DE TUTORES (NUEVO) ----------
+
+function getTutorsAdminPage(req, res) {
+  const user = req.session.user;
+  if (user.role !== 'admin') {
+    return res.status(403).send('Acceso denegado');
+  }
+
+  const tutors = listTutors();
+  res.render('tutorsAdmin', { tutors, error: null });
+}
+
+function postNewTutor(req, res) {
+  const user = req.session.user;
+  if (user.role !== 'admin') {
+    return res.status(403).send('Acceso denegado');
+  }
+
+  const { name, subject } = req.body;
+
+  try {
+    addTutor({ name, subject });
+    return res.redirect('/tutoring/tutors');
+  } catch (error) {
+    const tutors = listTutors();
+    return res.status(400).render('tutorsAdmin', {
+      tutors,
+      error: error.message
+    });
+  }
+}
+
+// ---------- API JSON para crear tutorías (ya la tenías) ----------
+
+function postNewSessionApi(req, res) {
+  const user = req.session.user;
+  const { studentId, tutorId, date, time, topic } = req.body || {};
+
+  const effectiveStudentId =
+    user.role === 'admin' ? (studentId || user.id) : user.id;
+
+  try {
+    const session = createSession({
+      studentId: effectiveStudentId,
+      tutorId,
+      date,
+      time,
+      topic
+    });
+
+    return res.status(201).json({
+      success: true,
+      session
+    });
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      error: error.message
+    });
+  }
+}
+
+// ---------- API JSON para crear tutores (nuevo) ----------
+
+function postNewTutorApi(req, res) {
+  const user = req.session.user;
+  if (user.role !== 'admin') {
+    return res.status(403).json({
+      success: false,
+      error: 'Acceso denegado'
+    });
+  }
+
+  const { name, subject } = req.body || {};
+
+  try {
+    const tutor = addTutor({ name, subject });
+    return res.status(201).json({
+      success: true,
+      tutor
+    });
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      error: error.message
+    });
+  }
+}
+
 module.exports = {
   getDashboard,
   getNewSession,
@@ -272,5 +361,9 @@ module.exports = {
   postCompleteSession,
   getRateSessionPage,
   postRateSession,
-  getStatsPage
+  getStatsPage,
+  getTutorsAdminPage,
+  postNewTutor,
+  postNewSessionApi,
+  postNewTutorApi
 };

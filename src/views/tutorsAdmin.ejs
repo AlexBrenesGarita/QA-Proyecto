@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Administrar tutores - TutorQA</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+<header class="header">
+  <div class="container">
+    <h1 class="logo">TutorQA</h1>
+    <nav>
+      <span class="user-info">
+        Hola, <%= currentUser.name %><% if (currentUser.role === 'admin') { %> (admin)<% } %>
+      </span>
+      <a href="/tutoring/dashboard">Dashboard</a>
+      <a href="/tutoring/sessions">Mis tutorías</a>
+      <% if (currentUser.role === 'admin') { %>
+        <a href="/tutoring/sessions/admin">Todas las tutorías</a>
+        <a href="/tutoring/tutors">Tutores</a>
+        <a href="/tutoring/stats">Estadísticas</a>
+      <% } %>
+      <a href="/logout" class="btn-secondary">Cerrar sesión</a>
+    </nav>
+  </div>
+</header>
+
+
+<main class="main">
+  <div class="container">
+    <h2>Administrar tutores</h2>
+
+    <section class="grid">
+      <div class="card">
+        <h3>Listado de tutores</h3>
+
+        <% if (tutors.length === 0) { %>
+          <p>No hay tutores registrados.</p>
+        <% } else { %>
+          <table class="table">
+            <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Materia</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% tutors.forEach(function(tutor) { %>
+              <tr>
+                <td><%= tutor.id %></td>
+                <td><%= tutor.name %></td>
+                <td><%= tutor.subject %></td>
+              </tr>
+            <% }) %>
+            </tbody>
+          </table>
+        <% } %>
+      </div>
+
+      <div class="card">
+        <h3>Agregar nuevo tutor</h3>
+
+        <% if (error) { %>
+          <div class="alert alert-error"><%= error %></div>
+        <% } %>
+
+        <form method="POST" action="/tutoring/tutors" class="form">
+          <div class="form-group">
+            <label for="name">Nombre del tutor</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              required
+              placeholder="Ej. José POO"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="subject">Materia</label>
+            <input
+              type="text"
+              id="subject"
+              name="subject"
+              required
+              placeholder="Ej. Programación Orientada a Objetos"
+            />
+          </div>
+
+          <button type="submit" class="btn-primary">Guardar tutor</button>
+        </form>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <p>Proyecto de Auditoría y Validación de Sistemas de Información - TutorQA</p>
+  </div>
+</footer>
+</body>
+</html>

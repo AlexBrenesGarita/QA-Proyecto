@@ -7,12 +7,44 @@ const tutors = [
   { id: 3, name: 'Lucía Bases de Datos', subject: 'Bases de Datos' }
 ];
 
+// contador para nuevos tutores
+let nextTutorId = tutors.length + 1;
+
 // Aquí se almacenan las sesiones en memoria
 const sessions = [];
+
+// ---------- TUTORES ----------
 
 function listTutors() {
   return [...tutors];
 }
+
+function addTutor({ name, subject }) {
+  if (!name || !subject) {
+    throw new Error('Nombre y materia son obligatorios');
+  }
+
+  const trimmedName = String(name).trim();
+  const trimmedSubject = String(subject).trim();
+
+  if (trimmedName.length < 3) {
+    throw new Error('El nombre del tutor debe tener al menos 3 caracteres');
+  }
+  if (trimmedSubject.length < 3) {
+    throw new Error('La materia debe tener al menos 3 caracteres');
+  }
+
+  const tutor = {
+    id: nextTutorId++,
+    name: trimmedName,
+    subject: trimmedSubject
+  };
+
+  tutors.push(tutor);
+  return tutor;
+}
+
+// ---------- SESIONES (TUTORÍAS) ----------
 
 function listSessionsByStudent(studentId) {
   return sessions.filter((s) => s.studentId === studentId);
@@ -58,8 +90,8 @@ function createSession({ studentId, tutorId, date, time, topic }) {
     createdAt: now,
     completedAt: null,
     canceledAt: null,
-    rating: null,          // NUEVO
-    feedback: ''           // NUEVO
+    rating: null,
+    feedback: ''
   };
 
   sessions.push(newSession);
@@ -110,7 +142,7 @@ function getStatusCounts() {
   return counts;
 }
 
-// ---------- NUEVO: valoración de sesiones ----------
+// ---------- VALORACIONES ----------
 
 function addSessionRating({ sessionId, studentId, rating, feedback }) {
   const session = getSessionById(sessionId);
@@ -183,6 +215,7 @@ function getRatingStats() {
 
 module.exports = {
   listTutors,
+  addTutor,
   listSessionsByStudent,
   listAllSessions,
   createSession,
@@ -190,6 +223,6 @@ module.exports = {
   getSessionById,
   updateSessionStatus,
   getStatusCounts,
-  addSessionRating,   // NUEVO
-  getRatingStats      // NUEVO
+  addSessionRating,
+  getRatingStats
 };
