@@ -1,3 +1,4 @@
+//Archivo en donde se guardan todos los usuarios que tiene la aplicacion
 module.exports = [
   {
     id: 1,
